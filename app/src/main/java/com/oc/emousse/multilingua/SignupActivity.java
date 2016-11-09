@@ -105,7 +105,13 @@ public class SignupActivity extends AppCompatActivity {
             _email.setError("Entrez un email valide.");
             valid = false;
         } else {
-            _email.setError(null);
+            User user = _realm.where(User.class).equalTo("email",email).findFirst();
+            if(user != null && user.email.equals(email) ){
+                valid =false;
+                _email.setError("Adresse email déjà prise.");
+            } else{
+                _email.setError(null);
+            }
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {

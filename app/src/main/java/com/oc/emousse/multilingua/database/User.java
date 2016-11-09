@@ -9,7 +9,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class User extends RealmObject {
     public String email;
-
     public String name;
     public String password;
 }

@@ -39,13 +39,6 @@ public class MainActivity extends AppCompatActivity {
         Realm.init(this);
         _realm = Realm.getDefaultInstance();
 
-        _realm.beginTransaction();
-        User u = _realm.createObject(User.class);
-        u.email = "marc@marc.com";
-        u.password = "0000";
-        u.name = "marc";
-        _realm.commitTransaction();
-
         _loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

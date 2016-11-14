@@ -11,8 +11,6 @@ import android.widget.Toast;
 
 import com.oc.emousse.multilingua.database.User;
 
-import org.w3c.dom.Text;
-
 import io.realm.Realm;
 
 public class SignupActivity extends AppCompatActivity {
@@ -48,10 +46,17 @@ public class SignupActivity extends AppCompatActivity {
         _loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignupActivity.this,MainActivity.class);
+                Intent intent = new Intent(SignupActivity.this,LoginActivity.class);
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Close the Realm instance.
+        _realm.close();
     }
 
     public void signup(){

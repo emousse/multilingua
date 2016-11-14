@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.oc.emousse.multilingua.MainActivity;
+import com.oc.emousse.multilingua.LoginActivity;
 
 import java.util.HashMap;
 
@@ -62,7 +62,7 @@ public class UserShared {
         editor.commit();
 
         // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, MainActivity.class);
+        Intent i = new Intent(_context, LoginActivity.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -77,7 +77,7 @@ public class UserShared {
         // Check login status
         if(!this.isLoggedIn()){
             // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, MainActivity.class);
+            Intent i = new Intent(_context, LoginActivity.class);
             // Closing all the Activities
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

@@ -28,6 +28,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        //Retrive realm instance
         _realm = Realm.getDefaultInstance();
 
         _name = (EditText) findViewById(R.id.input_name);

@@ -32,8 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton = (Button) findViewById(R.id.btn_login);
         _signupLink = (TextView) findViewById(R.id.link_signup);
 
-        //Initiate Realm
-        Realm.init(this);
+        //Retrieve realm instance
         _realm = Realm.getDefaultInstance();
 
         _loginButton.setOnClickListener(new View.OnClickListener() {

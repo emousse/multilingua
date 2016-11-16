@@ -5,12 +5,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.oc.emousse.multilingua.database.Lesson;
+import com.oc.emousse.multilingua.database.User;
 import com.oc.emousse.multilingua.pref.UserShared;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -18,13 +25,37 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    private Realm _realm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Initiate Realm
+        Realm.init(this);
+
+        //check if user logged in
         UserShared.getInstance(getApplicationContext()).checkLogin();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Retrive realm instance
+        _realm = Realm.getDefaultInstance();
+
+        //Load lesson
+        _realm.beginTransaction();
+        Lesson l = _realm.createObject(Lesson.class);
+        l.title = "Home et house";
+        l.description = "Home est employé dans le sens de foyer, l'endroit où l'on est chez soi.";
+        _realm.commitTransaction();
+
+        //find all lessons
+        RealmResults<Lesson> result = _realm.where(Lesson.class).findAll();
+
+        //setup recycler view and bind data
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.list_lessons);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(new LessonAdapter(result));
 
         //Initializing toolbar
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -40,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer();
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Close the Realm instance.
+        _realm.close();
     }
 
     private void navigationViewListener(){

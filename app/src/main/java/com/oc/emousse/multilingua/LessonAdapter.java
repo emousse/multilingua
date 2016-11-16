@@ -1,9 +1,11 @@
 package com.oc.emousse.multilingua;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oc.emousse.multilingua.database.Lesson;
@@ -42,6 +44,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
         private final TextView description;
+        private final ImageView icon;
 
         private Lesson currentLesson;
 
@@ -49,12 +52,14 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.recycler_title);
             description = (TextView) itemView.findViewById(R.id.recycler_description);
+            icon = (ImageView) itemView.findViewById(R.id.recycler_icon);
         }
 
         public void display(Lesson lesson){
             currentLesson = lesson;
             title.setText(lesson.title);
             description.setText(lesson.description);
+            icon.setImageResource(R.drawable.logout);
         }
     }
 }

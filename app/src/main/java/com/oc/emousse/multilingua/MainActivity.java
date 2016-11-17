@@ -1,6 +1,8 @@
 package com.oc.emousse.multilingua;
 
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //send close action to all subscribers
+        final Intent close = new Intent("close");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(close);
 
         //Retrive realm instance
         _realm = Realm.getDefaultInstance();
@@ -108,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.logout:
                         Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_SHORT).show();
+                        UserShared.getInstance(getApplicationContext()).logout();
                         return true;
                     default:
                         Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();

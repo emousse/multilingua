@@ -1,6 +1,9 @@
 package com.oc.emousse.multilingua;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +25,18 @@ public class LoginActivity extends AppCompatActivity {
     private TextView _signupLink;
 
     private Realm _realm;
+
+    //Subscribe to close action, prevent back action
+    private final IntentFilter intentFilter = new IntentFilter("close");
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("close".equals(intent.getAction())) {
+                finish();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,5 +1,6 @@
 package com.oc.emousse.multilingua;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.oc.emousse.multilingua.database.Lesson;
+import com.oc.emousse.multilingua.pref.UserShared;
 
 import java.util.List;
 
@@ -46,13 +49,39 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
         private final TextView description;
         private final ImageView icon;
 
+        //store current lesson
         private Lesson currentLesson;
 
-        public MyViewHolder(View itemView) {
+        //get the last open lesson timestamp in the constructor for getContext
+        private  long lastLessonTimestamp;
+
+        //get the 24h ago timestamp
+        private long yesterdayTimestamp = (System.currentTimeMillis() - 86400000) / 1000;
+
+        public MyViewHolder(final View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.recycler_title);
             description = (TextView) itemView.findViewById(R.id.recycler_description);
             icon = (ImageView) itemView.findViewById(R.id.recycler_icon);
+            lastLessonTimestamp = UserShared.getInstance(itemView.getContext()).getLastLessonTimestamp();
+
+            //configure onClickListener to redirect to the lesson if lastTimestamp < yesterdayTimestamp
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (UserShared.getInstance(itemView.getContext()).getLastLessonTimestamp()<yesterdayTimestamp){
+                        Intent i = new Intent(v.getContext(),LessonActivity.class);
+                        i.putExtra(LessonActivity.LESSON_TITLE,currentLesson.title);
+                        i.putExtra(LessonActivity.LESSON_DESCRIPTION,currentLesson.description);
+                        v.getContext().startActivity(i);
+
+                    }
+                    else {
+                        Toast.makeText(itemView.getContext(),"Un peu de patience",Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
         }
 
         public void display(Lesson lesson){

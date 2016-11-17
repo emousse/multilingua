@@ -24,6 +24,7 @@ public class UserShared {
     private static final String IS_LOGIN = "IsLoggedIn";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_LAST_LESSON = "LastLessonTimestamp";
 
     private UserShared(Context context){
         this._context = context;
@@ -35,6 +36,18 @@ public class UserShared {
         if(userShared == null)
             userShared = new UserShared(context);
         return userShared;
+    }
+
+    //save timestamp in user shared
+    public boolean setLastLessonTimestamp(long timestamp){
+        editor.putLong(KEY_LAST_LESSON,timestamp);
+        return editor.commit();
+    }
+
+    //get last timestamp
+    public long getLastLessonTimestamp(){
+        //by defaut "old" timestamp for unlock first lesson
+        return sharedPreferences.getLong(KEY_LAST_LESSON, 1465171200);
     }
 
     public void createLoginSession(String email, String name){

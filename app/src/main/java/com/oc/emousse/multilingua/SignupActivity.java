@@ -1,6 +1,9 @@
 package com.oc.emousse.multilingua;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +25,17 @@ public class SignupActivity extends AppCompatActivity {
     private TextView _loginLink;
 
     private Realm _realm;
+
+    //Subscribe to close action, prevent back action
+    private final IntentFilter intentFilter = new IntentFilter("close");
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("close".equals(intent.getAction())) {
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +98,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onSignupSucces(String email){
         Toast.makeText(getBaseContext(), email, Toast.LENGTH_LONG).show();
-
+        startActivity(new Intent(SignupActivity.this,LoginActivity.class));
     }
 
     public void onSignupFailed() {

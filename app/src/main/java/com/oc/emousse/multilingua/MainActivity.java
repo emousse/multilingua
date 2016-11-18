@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         Lesson l = _realm.createObject(Lesson.class);
         l.title = "Home et house";
         l.description = "Home est employé dans le sens de foyer, l'endroit où l'on est chez soi.";
+        l.enable = false;
         _realm.commitTransaction();
 
         //find all lessons

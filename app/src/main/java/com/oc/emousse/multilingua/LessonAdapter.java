@@ -48,6 +48,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
         private final TextView title;
         private final TextView description;
         private final ImageView icon;
+        private final View itemContainer;
 
         //store current lesson
         private Lesson currentLesson;
@@ -63,13 +64,16 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
             title = (TextView) itemView.findViewById(R.id.recycler_title);
             description = (TextView) itemView.findViewById(R.id.recycler_description);
             icon = (ImageView) itemView.findViewById(R.id.recycler_icon);
+            itemContainer = (View) itemView.findViewById(R.id.itemContainer);
+
             lastLessonTimestamp = UserShared.getInstance(itemView.getContext()).getLastLessonTimestamp();
 
             //configure onClickListener to redirect to the lesson if lastTimestamp < yesterdayTimestamp
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (UserShared.getInstance(itemView.getContext()).getLastLessonTimestamp()<yesterdayTimestamp){
+                    if (UserShared.getInstance(itemView.getContext()).getLastLessonTimestamp()<yesterdayTimestamp || currentLesson.enable){
+
                         Intent i = new Intent(v.getContext(),LessonActivity.class);
                         i.putExtra(LessonActivity.LESSON_TITLE,currentLesson.title);
                         i.putExtra(LessonActivity.LESSON_DESCRIPTION,currentLesson.description);
@@ -89,6 +93,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
             title.setText(lesson.title);
             description.setText(lesson.description);
             icon.setImageResource(R.drawable.logout);
+            itemContainer.setEnabled(lesson.enable);
         }
     }
 }

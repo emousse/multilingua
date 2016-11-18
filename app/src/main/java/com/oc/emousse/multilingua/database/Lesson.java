@@ -9,4 +9,5 @@ import io.realm.RealmObject;
 public class Lesson extends RealmObject {
     public String title;
     public String description;
+    public boolean enable;
 }

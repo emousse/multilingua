@@ -1,5 +1,6 @@
 package com.oc.emousse.multilingua.database;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
@@ -9,5 +10,6 @@ import io.realm.RealmObject;
 public class Lesson extends RealmObject {
     public String title;
     public String description;
+    public String category;
     public boolean enable;
 }

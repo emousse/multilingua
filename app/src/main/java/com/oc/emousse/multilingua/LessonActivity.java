@@ -2,6 +2,7 @@ package com.oc.emousse.multilingua;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class LessonActivity extends AppCompatActivity {
         TextView twTitle = (TextView) findViewById(R.id.lesson_title);
         TextView twDescription = (TextView) findViewById(R.id.lesson_description);
         twTitle.setText(title);
-        twDescription.setText(description);
+        twDescription.setText(Html.fromHtml(description));
 
         if(UserShared.getInstance(this).setLastLessonTimestamp(_currentTimestamp)){
             Toast.makeText(getApplicationContext(),"COMMIT",Toast.LENGTH_SHORT).show();

@@ -3,6 +3,7 @@
     <item
         android:drawable="@android:color/darker_gray"
         android:state_enabled="false" />
-
+    <item
+        android:drawable="@color/cardview_light_background" />
 
 </selector>

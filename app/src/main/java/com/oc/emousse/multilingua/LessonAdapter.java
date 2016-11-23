@@ -15,6 +15,8 @@ import com.oc.emousse.multilingua.pref.UserShared;
 
 import java.util.List;
 
+import io.realm.Realm;
+
 /**
  * Created by emousse on 16/11/2016.
  */
@@ -59,6 +61,8 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
         //get the 24h ago timestamp
         private long yesterdayTimestamp = (System.currentTimeMillis() - 86400000) / 1000;
 
+        private Realm _realm;
+
         public MyViewHolder(final View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.recycler_title);
@@ -73,7 +77,11 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
                 @Override
                 public void onClick(View v) {
                     if (UserShared.getInstance(itemView.getContext()).getLastLessonTimestamp()<yesterdayTimestamp || currentLesson.enable){
-
+                        _realm = Realm.getDefaultInstance();
+                        _realm.beginTransaction();
+                        currentLesson.enable = true;
+                        _realm.commitTransaction();
+                        notifyDataSetChanged();
                         Intent i = new Intent(v.getContext(),LessonActivity.class);
                         i.putExtra(LessonActivity.LESSON_TITLE,currentLesson.title);
                         i.putExtra(LessonActivity.LESSON_DESCRIPTION,currentLesson.description);
@@ -91,7 +99,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
         public void display(Lesson lesson){
             currentLesson = lesson;
             title.setText(lesson.title);
-            description.setText(lesson.description);
+            description.setText(lesson.category);
             icon.setImageResource(R.drawable.logout);
             itemContainer.setEnabled(lesson.enable);
         }

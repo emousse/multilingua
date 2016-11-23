@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.oc.emousse.multilingua.database.Lesson;
+import com.oc.emousse.multilingua.database.Quizz;
 import com.oc.emousse.multilingua.database.User;
 import com.oc.emousse.multilingua.pref.UserShared;
 
@@ -49,12 +50,31 @@ public class MainActivity extends AppCompatActivity {
         _realm = Realm.getDefaultInstance();
 
         //Load lesson
-        _realm.beginTransaction();
-        Lesson l = _realm.createObject(Lesson.class);
-        l.title = "Home et house";
-        l.description = "Home est employé dans le sens de foyer, l'endroit où l'on est chez soi.";
-        l.enable = false;
-        _realm.commitTransaction();
+        _realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Lesson l = _realm.createObject(Lesson.class);
+                l.title = "Présent simple";
+                l.category = "Grammaire";
+                l.description = "<ul><li>\n" +
+                        "\t\tLe présent simple est utilisé pour exprimer des habitudes, des vérités générales, des actions répétées ou des situations immuables, des émotions et des désirs :<br><b>I smoke</b> (habit); <b>I work in London</b> (unchanging situation); <b>London is a large city</b> (general truth)</li>\n" +
+                        "<li>\n" +
+                        "\t\tpour donner des instructions ou des directives :<br><b>You walk</b> for two hundred meters, then <b>you turn</b> left.</li>\n" +
+                        "<li>\n" +
+                        "\t\tpour exprimer des dispositions fixes, présentes ou futures :<br>\n" +
+                        "\t\tYour exam <b>starts</b> at 09.00</li>\n" +
+                        "<li>\n" +
+                        "\t\tpour exprimer le futur, après certaines conjonctions : <b><em>after, when, before, as soon as, until</em>:<br>\n" +
+                        "\t\tHe'll give it to you when <b>you come</b> next Saturday.</b></li>\n" +
+                        "</ul>";
+                l.enable = false;
+
+                Quizz q = _realm.createObject(Quizz.class);
+                q.question = "Question?";
+                q.answer = "reponse";
+                q.lesson = l;
+            }
+        });
 
         //find all lessons
         RealmResults<Lesson> result = _realm.where(Lesson.class).findAll();
@@ -63,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView rv = (RecyclerView) findViewById(R.id.list_lessons);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new LessonAdapter(result));
+
 
         //Initializing toolbar
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -112,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.quiz:
                         Toast.makeText(getApplicationContext(),"Quiz",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this,QuizzActivity.class));
                         return true;
                     case R.id.logout:
                         Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_SHORT).show();

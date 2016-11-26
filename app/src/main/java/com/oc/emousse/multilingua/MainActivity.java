@@ -1,6 +1,9 @@
 package com.oc.emousse.multilingua;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
@@ -29,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private Realm _realm;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView rv = (RecyclerView) findViewById(R.id.list_lessons);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new LessonAdapter(result));
-
 
         //Initializing toolbar
         toolbar = (Toolbar) findViewById(R.id.tool_bar);

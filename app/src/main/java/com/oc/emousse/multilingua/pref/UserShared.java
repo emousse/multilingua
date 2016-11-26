@@ -10,6 +10,8 @@ import com.oc.emousse.multilingua.database.User;
 
 import java.util.HashMap;
 
+import io.realm.Realm;
+
 /**
  * Created by emousse on 08/11/2016.
  */
@@ -20,8 +22,6 @@ public class UserShared {
     private  SharedPreferences sharedPreferences;
     private Context _context;
     private Editor editor;
-    private User _user;
-
     private static final String PREF_NAME = "UserShared";
     private static final String IS_LOGIN = "IsLoggedIn";
     private static final String KEY_NAME = "name";
@@ -52,8 +52,7 @@ public class UserShared {
         return sharedPreferences.getLong(KEY_LAST_LESSON, 1465171200);
     }
 
-    public void createLoginSession(String email, String name, User user){
-        _user = user;
+    public void createLoginSession(String email, String name){
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_NAME, name);
@@ -70,10 +69,6 @@ public class UserShared {
 
         // return user
         return user;
-    }
-
-    public User getUser(){
-        return _user;
     }
 
     public void logout(){

@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if(password.equals(user.password)){
-            onLoginSuccess(email,password, user);
+            onLoginSuccess(email,password);
         } else {
             onLoginFailed();
         }
@@ -100,11 +100,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void onLoginSuccess(String email, String name, User user){
+    public void onLoginSuccess(String email, String name){
         _loginButton.setEnabled(true);
         Toast.makeText(getBaseContext(), "Connexion OK", Toast.LENGTH_LONG).show();
 
-        UserShared.getInstance(getApplicationContext()).createLoginSession(email, name, user);
+        UserShared.getInstance(getApplicationContext()).createLoginSession(email, name);
         Intent i = new Intent(LoginActivity.this,MainActivity.class);
         startActivity(i);
         finish();

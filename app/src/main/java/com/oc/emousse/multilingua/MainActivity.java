@@ -1,170 +1,142 @@
 package com.oc.emousse.multilingua;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
-
-import com.oc.emousse.multilingua.database.Lesson;
-import com.oc.emousse.multilingua.database.Quizz;
-import com.oc.emousse.multilingua.database.User;
 import com.oc.emousse.multilingua.pref.UserShared;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
-    private Toolbar toolbar;
-    private NavigationView navigationView;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private Realm _realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Initiate Realm
         Realm.init(this);
 
-        //check if user logged in
-        UserShared.getInstance(getApplicationContext()).checkLogin();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //send close action to all subscribers
-        final Intent close = new Intent("close");
-        LocalBroadcastManager.getInstance(this).sendBroadcast(close);
 
-        //Retrive realm instance
-        _realm = Realm.getDefaultInstance();
+        //check if user logged in
+        //UserShared.getInstance(getApplicationContext()).checkLogin();
 
-        //Load lesson
-        _realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Lesson l = _realm.createObject(Lesson.class);
-                l.title = "Présent simple";
-                l.category = "Grammaire";
-                l.description = "<ul><li>\n" +
-                        "\t\tLe présent simple est utilisé pour exprimer des habitudes, des vérités générales, des actions répétées ou des situations immuables, des émotions et des désirs :<br><b>I smoke</b> (habit); <b>I work in London</b> (unchanging situation); <b>London is a large city</b> (general truth)</li>\n" +
-                        "<li>\n" +
-                        "\t\tpour donner des instructions ou des directives :<br><b>You walk</b> for two hundred meters, then <b>you turn</b> left.</li>\n" +
-                        "<li>\n" +
-                        "\t\tpour exprimer des dispositions fixes, présentes ou futures :<br>\n" +
-                        "\t\tYour exam <b>starts</b> at 09.00</li>\n" +
-                        "<li>\n" +
-                        "\t\tpour exprimer le futur, après certaines conjonctions : <b><em>after, when, before, as soon as, until</em>:<br>\n" +
-                        "\t\tHe'll give it to you when <b>you come</b> next Saturday.</b></li>\n" +
-                        "</ul>";
-                l.enable = false;
+        if(UserShared.getInstance(getApplicationContext()).isLoggedIn()){
+            //send close action to all subscribers
+            final Intent close = new Intent("close");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(close);
 
-                Quizz q = _realm.createObject(Quizz.class);
-                q.question = "Question?";
-                q.answer = "reponse";
-                q.lesson = l;
-            }
-        });
+            //Initializing toolbar
+            Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+            setSupportActionBar(toolbar);
 
-        //find all lessons
-        RealmResults<Lesson> result = _realm.where(Lesson.class).findAll();
+            //Initializing navigation view and setChecked first item
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
-        //setup recycler view and bind data
-        final RecyclerView rv = (RecyclerView) findViewById(R.id.list_lessons);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new LessonAdapter(result));
+            //Set drawer layout
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+            drawerLayout.setDrawerListener(mDrawerToggle);
+            mDrawerToggle.syncState();
 
-        //Initializing toolbar
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
+            //On ajoute un fragment par défaut via la méthode "replace".
+            changeFragment(LessonFragment.class, true);
+        }
+        else {
+            // user is not logged in redirect him to Login Activity
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+            // Closing all the Activities
+            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        //Initializing navigation view and setChecked first item
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationViewListener();
-        navigationView.getMenu().getItem(0).setChecked(true);
+            // Add new Flag to start new Activity
+            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        //Set drawer layout
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        setupDrawer();
+            // Staring Login Activity
+            startActivity(i);
+            finish();
+        }
+    }
 
-
+    @Override
+    public void onBackPressed()
+    {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+        {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // Close the Realm instance.
-        _realm.close();
+        //_realm.close();
     }
 
-    private void navigationViewListener(){
-        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-            // This method will trigger on item Click of navigation menu
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+        if (id == R.id.lessons)
+        {
+            //on ajoute les autres fragments via la méthode "add"
+            changeFragment(LessonFragment.class, true);
+        }
+        else if (id == R.id.quiz)
+        {
+            //on ajoute les autres fragments via la méthode "add"
+            changeFragment(QuizzFragment.class, true);
+        }
+        else if (id == R.id.logout)
+        {
+            UserShared.getInstance(getApplicationContext()).logout();
+        }
 
-
-                //Checking if the item is in checked state or not, if not make it in checked state
-                if(menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
-
-                //Closing drawer on item click
-                drawerLayout.closeDrawers();
-
-                //Check to see which item was being clicked and perform appropriate action
-                switch (menuItem.getItemId()){
-                    // For rest of the options we just show a toast on click
-
-                    case R.id.lessons:
-                        Toast.makeText(getApplicationContext(),"Cours",Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.quiz:
-                        Toast.makeText(getApplicationContext(),"Quiz",Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(MainActivity.this,QuizzActivity.class));
-                        return true;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_SHORT).show();
-                        UserShared.getInstance(getApplicationContext()).logout();
-                        return true;
-                    default:
-                        Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();
-                        return true;
-
-                }
-            }
-        });
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
-    private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.drawer_open, R.string.drawer_close) {
+    private void changeFragment(Class<? extends Fragment> fragmentClass, boolean isFirst)
+    {
+        try
+        {
+            final Fragment fragment = fragmentClass.newInstance();
+            final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
+            // We can also animate the changing of fragment.
+            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            // Replace current fragment by the new one.
+            fragmentTransaction.replace(R.id.fragmentContainer, fragment);
+            // Null on the back stack to return on the previous fragment when user
+            // press on back button.
+            fragmentTransaction.addToBackStack(null);
 
-            }
+            // Commit changes.
+            fragmentTransaction.commit();
+        }
+        catch (Exception exception)
+        {
 
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-            }
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
+        }
     }
 }

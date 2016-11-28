@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.oc.emousse.multilingua.database.Lesson;
+import com.oc.emousse.multilingua.database.Quizz;
 import com.oc.emousse.multilingua.database.User;
 
 import io.realm.Realm;
@@ -82,18 +84,46 @@ public class SignupActivity extends AppCompatActivity {
 
         _signupButton.setEnabled(false);
 
-        String email = _email.getText().toString();
-        String password = _password.getText().toString();
-        String name = _name.getText().toString();
+        final String email = _email.getText().toString();
+        final String password = _password.getText().toString();
+        final String name = _name.getText().toString();
 
-        _realm.beginTransaction();
-        User u = _realm.createObject(User.class);
-        u.name = name;
-        u.password = password;
-        u.email = email;
-        _realm.commitTransaction();
+        //Load lesson
+        _realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                User u = _realm.createObject(User.class);
+                u.name = name;
+                u.password = password;
+                u.email = email;
 
-        onSignupSucces(u.email);
+                //load all lessons to user
+                Lesson l = _realm.createObject(Lesson.class);
+                l.title = "Présent simple";
+                l.category = "Grammaire";
+                l.description = "<ul><li>\n" +
+                        "\t\tLe présent simple est utilisé pour exprimer des habitudes, des vérités générales, des actions répétées ou des situations immuables, des émotions et des désirs :<br><b>I smoke</b> (habit); <b>I work in London</b> (unchanging situation); <b>London is a large city</b> (general truth)</li>\n" +
+                        "<li>\n" +
+                        "\t\tpour donner des instructions ou des directives :<br><b>You walk</b> for two hundred meters, then <b>you turn</b> left.</li>\n" +
+                        "<li>\n" +
+                        "\t\tpour exprimer des dispositions fixes, présentes ou futures :<br>\n" +
+                        "\t\tYour exam <b>starts</b> at 09.00</li>\n" +
+                        "<li>\n" +
+                        "\t\tpour exprimer le futur, après certaines conjonctions : <b><em>after, when, before, as soon as, until</em>:<br>\n" +
+                        "\t\tHe'll give it to you when <b>you come</b> next Saturday.</b></li>\n" +
+                        "</ul>";
+                l.enable = false;
+
+                Quizz q = _realm.createObject(Quizz.class);
+                q.question = "Question?";
+                q.answer = "reponse";
+                q.lesson = l;
+
+                u.lessons.add(l);
+            }
+        });
+
+        onSignupSucces("a suppr");
     }
 
     public void onSignupSucces(String email){

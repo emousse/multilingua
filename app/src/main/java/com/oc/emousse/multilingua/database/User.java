@@ -12,4 +12,5 @@ public class User extends RealmObject {
     public String email;
     public String name;
     public String password;
+    public RealmList<Lesson> lessons;
 }

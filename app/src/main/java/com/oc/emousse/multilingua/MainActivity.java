@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.oc.emousse.multilingua.database.Rendezvous;
 import com.oc.emousse.multilingua.pref.UserShared;
 
 import io.realm.Realm;
@@ -105,6 +107,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             //on ajoute les autres fragments via la méthode "add"
             changeFragment(QuizzFragment.class, true);
+        }
+        else if (id == R.id.rdv)
+        {
+            //on ajoute les autres fragments via la méthode "add"
+            changeFragment(RendezvousFragment.class, true);
         }
         else if (id == R.id.logout)
         {

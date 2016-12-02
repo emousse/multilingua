@@ -15,6 +15,12 @@
             android:title="Quiz" />
 
         <item
+            android:id="@+id/rdv"
+            android:checked="false"
+            android:icon="@android:drawable/ic_menu_my_calendar"
+            android:title="Mes rendez-vous" />
+
+        <item
             android:id="@+id/logout"
             android:checked="false"
             android:icon="@drawable/logout"

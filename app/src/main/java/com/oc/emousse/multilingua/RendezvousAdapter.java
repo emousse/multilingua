@@ -26,7 +26,7 @@ public class RendezvousAdapter extends RecyclerView.Adapter<RendezvousAdapter.My
 
     @Override
     public RendezvousAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_rendezvous,parent);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_rendezvous,parent,false);
         return new RendezvousAdapter.MyViewHolder(view);
     }
 
@@ -42,16 +42,18 @@ public class RendezvousAdapter extends RecyclerView.Adapter<RendezvousAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private Rendezvous _currentRdv;
-        private TextView _title;
+        private TextView _title, _date;
         
         public MyViewHolder(View itemView) {
             super(itemView);
             _title = (TextView) itemView.findViewById(R.id.recycler_title_rendezvous);
+            _date = (TextView) itemView.findViewById(R.id.recycler_date_rendezvous);
         }
         
         public void display(Rendezvous rdv){
             _currentRdv = rdv;
             _title.setText(rdv.title);
+            _date.setText(rdv.date.toString());
         }
     }
 }

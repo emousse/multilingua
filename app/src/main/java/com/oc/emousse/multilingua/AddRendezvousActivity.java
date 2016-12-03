@@ -10,12 +10,19 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.oc.emousse.multilingua.database.Rendezvous;
 
 import java.util.Calendar;
+import java.util.Date;
+
+import io.realm.Realm;
 
 public class AddRendezvousActivity extends AppCompatActivity implements View.OnClickListener{
-    Button btnDatePicker, btnTimePicker;
-    EditText txtDate, txtTime;
+    Button btnDatePicker, btnTimePicker, btnValidate;
+    EditText txtDate, txtTime, txtTitle;
+    Realm _realm;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     @Override
@@ -31,11 +38,14 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
 
         btnDatePicker=(Button)findViewById(R.id.btn_date);
         btnTimePicker=(Button)findViewById(R.id.btn_time);
+        btnValidate=(Button)findViewById(R.id.validate_rdv);
         txtDate=(EditText)findViewById(R.id.in_date);
         txtTime=(EditText)findViewById(R.id.in_time);
+        txtTitle=(EditText) findViewById(R.id.rdv_title);
 
         btnDatePicker.setOnClickListener(this);
         btnTimePicker.setOnClickListener(this);
+        btnValidate.setOnClickListener(this);
     }
 
     @Override
@@ -52,6 +62,7 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                     new DatePickerDialog.OnDateSetListener() {
 
+
                         @Override
                         public void onDateSet(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
@@ -60,6 +71,7 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
 
                         }
                     }, mYear, mMonth, mDay);
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             datePickerDialog.show();
         }
         if (v == btnTimePicker) {
@@ -82,5 +94,49 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         }
+        if (v == btnValidate) {
+            if(validate()) {
+                //create Date object for Rendezvoys bo
+                final Date date = new Date(mYear,mMonth,mDay,mHour,mMinute);
+
+                //commit Rendezvous object in Realm
+                _realm = Realm.getDefaultInstance();
+                _realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Rendezvous r = _realm.createObject(Rendezvous.class);
+                        r.title = txtTitle.getText().toString();
+                        r.date = date;
+                    }
+                });
+                finish();
+            } else {
+                //show alert dialog or toast
+                Toast.makeText(this, "Impossible de créer ce rendez-vous.", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    public boolean validate(){
+        boolean valid = true;
+
+        String title = txtTitle.getText().toString();
+
+        if (title.isEmpty() || title.length() < 3) {
+            txtTitle.setError("Le titre doit comprendre plus de 3 caractères");
+            valid = false;
+        } else {
+            txtTitle.setError(null);
+        }
+
+        if (mHour < 8 || mHour > 18){
+            valid = false;
+            txtTime.setError("L'heure doit être comprise entre 8h et 18h.");
+        } else {
+            txtTime.setError(null);
+        }
+
+        return valid;
     }
 }

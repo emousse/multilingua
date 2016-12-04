@@ -53,7 +53,7 @@ public class RendezvousAdapter extends RecyclerView.Adapter<RendezvousAdapter.My
         public void display(Rendezvous rdv){
             _currentRdv = rdv;
             _title.setText(rdv.title);
-            _date.setText(rdv.date.toString());
+            _date.setText(rdv.date.toLocaleString());
         }
     }
 }

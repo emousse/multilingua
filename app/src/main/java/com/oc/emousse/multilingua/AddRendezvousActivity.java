@@ -1,7 +1,11 @@
 package com.oc.emousse.multilingua;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,8 +18,10 @@ import android.widget.Toast;
 
 import com.oc.emousse.multilingua.database.Rendezvous;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import io.realm.Realm;
 
@@ -68,7 +74,9 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
                                               int monthOfYear, int dayOfMonth) {
 
                             txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-
+                            mYear = year;
+                            mMonth = monthOfYear;
+                            mDay = dayOfMonth;
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -90,6 +98,8 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
                                               int minute) {
 
                             txtTime.setText(hourOfDay + ":" + minute);
+                            mHour = hourOfDay;
+                            mMinute = minute;
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
@@ -97,7 +107,15 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
         if (v == btnValidate) {
             if(validate()) {
                 //create Date object for Rendezvoys bo
-                final Date date = new Date(mYear,mMonth,mDay,mHour,mMinute);
+                //final Date date = new Date(mYear,mMonth,mDay,mHour,mMinute);
+
+                //set alarm manager
+                final Calendar c = Calendar.getInstance();
+                c.set(mYear,mMonth,mDay,mHour,mMinute);
+
+                //AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                //PendingIntent pi = PendingIntent.getBroadcast(this,0,new Intent(this,MainActivity.class),PendingIntent.FLAG_CANCEL_CURRENT);
+                //am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
 
                 //commit Rendezvous object in Realm
                 _realm = Realm.getDefaultInstance();
@@ -106,7 +124,7 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
                     public void execute(Realm realm) {
                         Rendezvous r = _realm.createObject(Rendezvous.class);
                         r.title = txtTitle.getText().toString();
-                        r.date = date;
+                        r.date = c.getTime();
                     }
                 });
                 finish();

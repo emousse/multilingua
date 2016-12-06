@@ -1,6 +1,7 @@
 package com.oc.emousse.multilingua;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -112,6 +113,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             //on ajoute les autres fragments via la méthode "add"
             changeFragment(RendezvousFragment.class, true);
+        }
+        else if (id == R.id.contact)
+        {
+            //start intent for sending mail
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "contact@multilingua.com", null));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Demande de rendez-vous");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Votre message..");
+            startActivity(Intent.createChooser(emailIntent, "Send email..."));
         }
         else if (id == R.id.logout)
         {

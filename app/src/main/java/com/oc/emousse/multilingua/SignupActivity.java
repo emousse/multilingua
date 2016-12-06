@@ -115,8 +115,9 @@ public class SignupActivity extends AppCompatActivity {
                 l.enable = false;
 
                 Quizz q = _realm.createObject(Quizz.class);
-                q.question = "Question?";
-                q.answer = "reponse";
+                q.question = "Le présent simple est le <strong>temps de la vérité générale</strong>. Il désigne donc une action qui se répète dans le temps (<em>I go there every Sunday</em>) ou qui est toujours vraie (<em>water boils at 100°C</em>).</p>";
+                q.description = "<strong>Quizz n°1</strong> sur le présent simple.";
+                q.answer = false;
                 q.lesson = l;
 
                 u.lessons.add(l);

@@ -1,6 +1,8 @@
 package com.oc.emousse.multilingua;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,12 +55,21 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.MyViewHolder
             title = (TextView) itemView.findViewById(R.id.recycler_title_quizz);
             description = (TextView) itemView.findViewById(R.id.recycler_description_quizz);
             icon = (ImageView) itemView.findViewById(R.id.recycler_icon_quizz);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(v.getContext(),QuizzActivity.class);
+                    i.putExtra(QuizzActivity.QUIZZ_QUESTION,currentQuizz.question);
+                    i.putExtra(QuizzActivity.QUIZZ_ANSWER,currentQuizz.question);
+                    v.getContext().startActivity(i);
+                }
+            });
         }
 
         public void display(Quizz quizz){
             currentQuizz = quizz;
-            title.setText(quizz.question);
-            description.setText(quizz.answer);
+            title.setText(Html.fromHtml(quizz.description));
             icon.setImageResource(R.drawable.logout);
         }
     }

@@ -21,6 +21,12 @@
             android:title="Mes rendez-vous" />
 
         <item
+            android:id="@+id/contact"
+            android:checked="false"
+            android:icon="@android:drawable/ic_menu_send"
+            android:title="Nous contacter" />
+
+        <item
             android:id="@+id/logout"
             android:checked="false"
             android:icon="@drawable/logout"

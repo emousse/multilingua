@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,99 +23,48 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class QuizzActivity extends AppCompatActivity {
-    private Toolbar toolbar;
-    private NavigationView navigationView;
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
+    public static final String QUIZZ_QUESTION = "question";
+    public static final String QUIZZ_ANSWER = "answer";
 
-    private Realm _realm;
+    private String _question;
+    private boolean _answer;
+    private RadioButton _rbFalse;
+    private RadioButton _rbTrue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz);
 
-        _realm = Realm.getDefaultInstance();
+        _question = getIntent().getStringExtra(QUIZZ_QUESTION);
+        _answer = getIntent().getBooleanExtra(QUIZZ_ANSWER, false);
 
-        RealmResults<Quizz> results = _realm.where(Quizz.class).equalTo("lesson.enable", true).findAll();
+        TextView q1 = (TextView) findViewById(R.id.quizz_question_1);
+        q1.setText(Html.fromHtml(_question));
 
-        //setup recycler view and bind data
-        final RecyclerView rv = (RecyclerView) findViewById(R.id.list_quizz);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new QuizzAdapter(results));
-
-        //TextView viewById = (TextView) findViewById(R.id.textView);
-        //viewById.setText(results.get(0).question);
-
-        //setup toolbar
-        toolbar = (Toolbar) findViewById(R.id.tool_bar_quizz);
-        setSupportActionBar(toolbar);
-
-        //Initializing navigation view and setChecked first item
-        navigationView = (NavigationView) findViewById(R.id.nav_view_quizz);
-        navigationViewListener();
-        navigationView.getMenu().getItem(1).setChecked(true);
-
-        //Set drawer layout
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_quizz);
-        setupDrawer();
+        _rbTrue = (RadioButton) findViewById(R.id.true_1);
+        _rbFalse = (RadioButton) findViewById(R.id.false_1);
     }
 
-    private void navigationViewListener(){
-        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-
-            // This method will trigger on item Click of navigation menu
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-
-                //Checking if the item is in checked state or not, if not make it in checked state
-                if(menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
-
-                //Closing drawer on item click
-                drawerLayout.closeDrawers();
-
-                //Check to see which item was being clicked and perform appropriate action
-                switch (menuItem.getItemId()){
-                    // For rest of the options we just show a toast on click
-
-                    case R.id.lessons:
-                        Toast.makeText(getApplicationContext(),"Cours",Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.quiz:
-                        Toast.makeText(getApplicationContext(),"Quiz",Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_SHORT).show();
-                        UserShared.getInstance(getApplicationContext()).logout();
-                        return true;
-                    default:
-                        Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();
-                        return true;
-
-                }
-            }
-        });
+    public void checkAnswer(View v){
+        if(validateQuizz()){
+            //quizz réussi
+        } else{
+            //toast with fail message
+        }
     }
 
-    private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.drawer_open, R.string.drawer_close) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-
-            }
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-            }
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
+    public boolean validateQuizz(){
+        boolean valid = true;
+        if(_answer){
+            //if true check radio button true is checked
+            if(!_rbTrue.isChecked())
+                valid = false;
+        } else{
+            //check radio button false is checked
+            if(!_rbFalse.isChecked())
+                valid = false;
+        }
+        return valid;
     }
 }

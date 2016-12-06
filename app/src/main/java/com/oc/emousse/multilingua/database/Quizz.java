@@ -9,7 +9,8 @@ import io.realm.RealmObject;
  */
 
 public class Quizz extends RealmObject {
+    public String description;
     public String question;
-    public String answer;
+    public boolean answer;
     public Lesson lesson;
 }

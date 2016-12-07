@@ -49,8 +49,10 @@ public class QuizzActivity extends AppCompatActivity {
     public void checkAnswer(View v){
         if(validateQuizz()){
             //quizz réussi
+            Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show();
         } else{
             //toast with fail message
+            Toast.makeText(this, "FALSE", Toast.LENGTH_SHORT).show();
         }
     }
 

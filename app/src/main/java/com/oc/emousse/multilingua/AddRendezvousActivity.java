@@ -122,11 +122,11 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
                     //et on se base sur System.currentTimeMillis() pour programmer l'alarme (RTC)
                     //2. On programme l'alarme : dans notre cas c'est dans 10 secondes (timestamp + 10 secondes exprimées en millisecondes)
                     //3. la pending intent
-                    am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10 * 1000, pi);
+                    am.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() + 10 * 1000, pi);
                 }
                 else
                 {
-                    am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10 * 1000, pi);
+                    am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() + 10 * 1000, pi);
                 }
 
                 //commit Rendezvous object in Realm

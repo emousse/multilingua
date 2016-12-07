@@ -20,6 +20,8 @@
         <activity android:name=".LessonActivity" />
         <activity android:name=".QuizzActivity" />
         <activity android:name=".AddRendezvousActivity"></activity>
+        <receiver android:name=".AlarmReceiver"/>
+
     </application>
 
 </manifest>

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.oc.emousse.multilingua.database.Lesson;
 import com.oc.emousse.multilingua.database.Quizz;
+import com.oc.emousse.multilingua.pref.MyInterface;
 
 import java.util.List;
 
@@ -20,9 +21,11 @@ import java.util.List;
 
 public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.MyViewHolder> {
     private List<Quizz> _quizz;
+    private MyInterface _myInterface;
 
-    public QuizzAdapter(List<Quizz> quizz) {
+    public QuizzAdapter(List<Quizz> quizz, MyInterface myInterface) {
         _quizz = quizz;
+        _myInterface = myInterface;
     }
 
     @Override
@@ -61,8 +64,8 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.MyViewHolder
                 public void onClick(View v) {
                     Intent i = new Intent(v.getContext(),QuizzActivity.class);
                     i.putExtra(QuizzActivity.QUIZZ_QUESTION,currentQuizz.question);
-                    i.putExtra(QuizzActivity.QUIZZ_ANSWER,currentQuizz.question);
-                    v.getContext().startActivity(i);
+                    i.putExtra(QuizzActivity.QUIZZ_ANSWER,currentQuizz.answer);
+                    _myInterface.run(i);
                 }
             });
         }

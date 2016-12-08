@@ -12,5 +12,5 @@ public class Quizz extends RealmObject {
     public String description;
     public String question;
     public boolean answer;
-    public Lesson lesson;
+    public boolean isCompleted;
 }

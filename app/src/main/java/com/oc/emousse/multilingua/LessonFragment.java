@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.oc.emousse.multilingua.database.Lesson;
+import com.oc.emousse.multilingua.database.User;
+import com.oc.emousse.multilingua.pref.MyInterface;
+import com.oc.emousse.multilingua.pref.UserShared;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -32,7 +35,8 @@ public class LessonFragment extends Fragment {
         _realm = Realm.getDefaultInstance();
 
         //find all lessons
-        RealmResults<Lesson> result = _realm.where(Lesson.class).findAll();
+        String mail = UserShared.getInstance(getContext()).getEmail();
+        User u = _realm.where(User.class).equalTo("email", mail).findFirst();
 
         //inflate fragment_lesson xml
         View view = inflater.inflate(R.layout.fragment_lesson, container, false);
@@ -40,7 +44,7 @@ public class LessonFragment extends Fragment {
         //setup recycler view and bind data
         final RecyclerView rv = (RecyclerView) view.findViewById(R.id.list_lessons);
         rv.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        rv.setAdapter(new LessonAdapter(result));
+        rv.setAdapter(new LessonAdapter(u.lessons));
 
         // Inflate the layout for this fragment
         return view;
@@ -51,4 +55,5 @@ public class LessonFragment extends Fragment {
         super.onDestroy();
         _realm.close();
     }
+
 }

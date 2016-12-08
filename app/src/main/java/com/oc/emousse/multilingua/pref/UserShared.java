@@ -59,6 +59,10 @@ public class UserShared {
         editor.commit();
     }
 
+    public String getEmail(){
+        return sharedPreferences.getString(KEY_EMAIL, "");
+    }
+
     public HashMap<String, String> getUserDetails(){
         HashMap<String, String> user = new HashMap<String, String>();
         // user name

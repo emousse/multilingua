@@ -8,6 +8,7 @@ import io.realm.RealmObject;
  */
 
 public class Lesson extends RealmObject {
+    public Quizz quizz;
     public String title;
     public String description;
     public String category;

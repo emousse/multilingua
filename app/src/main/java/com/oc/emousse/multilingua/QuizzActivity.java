@@ -1,5 +1,6 @@
 package com.oc.emousse.multilingua;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -49,7 +50,9 @@ public class QuizzActivity extends AppCompatActivity {
     public void checkAnswer(View v){
         if(validateQuizz()){
             //quizz réussi
-            Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show();
+            setResult(Activity.RESULT_OK, new Intent().putExtra("name","salut"));
+            finish();
+
         } else{
             //toast with fail message
             Toast.makeText(this, "FALSE", Toast.LENGTH_SHORT).show();

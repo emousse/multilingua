@@ -26,9 +26,11 @@ import io.realm.RealmResults;
 public class QuizzActivity extends AppCompatActivity {
     public static final String QUIZZ_QUESTION = "question";
     public static final String QUIZZ_ANSWER = "answer";
+    public static final String LESSON_ID = "lesson_id";
 
     private String _question;
     private boolean _answer;
+    private int _lessonId;
     private RadioButton _rbFalse;
     private RadioButton _rbTrue;
 
@@ -39,6 +41,7 @@ public class QuizzActivity extends AppCompatActivity {
 
         _question = getIntent().getStringExtra(QUIZZ_QUESTION);
         _answer = getIntent().getBooleanExtra(QUIZZ_ANSWER, false);
+        _lessonId = getIntent().getIntExtra(LESSON_ID,0);
 
         TextView q1 = (TextView) findViewById(R.id.quizz_question_1);
         q1.setText(Html.fromHtml(_question));
@@ -50,7 +53,7 @@ public class QuizzActivity extends AppCompatActivity {
     public void checkAnswer(View v){
         if(validateQuizz()){
             //quizz réussi
-            setResult(Activity.RESULT_OK, new Intent().putExtra("name","salut"));
+            setResult(Activity.RESULT_OK, new Intent().putExtra(LESSON_ID,_lessonId));
             finish();
 
         } else{

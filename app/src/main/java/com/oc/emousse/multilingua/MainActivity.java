@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.oc.emousse.multilingua.database.Rendezvous;
 import com.oc.emousse.multilingua.pref.UserShared;
@@ -46,6 +48,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //Initializing navigation view and setChecked first item
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
+
+            //set text for navigation header
+            View header=navigationView.getHeaderView(0);
+            TextView name = (TextView)header.findViewById(R.id.username);
+            TextView email = (TextView)header.findViewById(R.id.email);
+            name.setText(UserShared.getInstance(this).getUserDetails().get("name"));
+            email.setText(UserShared.getInstance(this).getUserDetails().get("email"));
 
             //Set drawer layout
             drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

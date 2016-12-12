@@ -45,7 +45,7 @@ public class QuizzFragment extends Fragment implements MyInterface {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK){
             if (requestCode == 1){
-                Toast.makeText(getContext(), data.getStringExtra("name"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), Integer.toString(data.getIntExtra(QuizzActivity.LESSON_ID,0)), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -58,10 +58,6 @@ public class QuizzFragment extends Fragment implements MyInterface {
         String mail = UserShared.getInstance(getContext()).getEmail();
         User u = _realm.where(User.class).equalTo("email", mail).findFirst();
         RealmResults<Lesson> lessons = u.lessons.where().equalTo("enable", true).findAll();
-        List<Quizz> quizz = new RealmList<>();
-        for (Lesson l : lessons) {
-            quizz.add(l.quizz);
-        }
 
         //inflate view from xml
         View view = inflater.inflate(R.layout.fragment_quizz, container, false);
@@ -69,7 +65,7 @@ public class QuizzFragment extends Fragment implements MyInterface {
         //setup recycler view and bind data
         final RecyclerView rv = (RecyclerView) view.findViewById(R.id.list_quizz);
         rv.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        rv.setAdapter(new QuizzAdapter(quizz,this));
+        rv.setAdapter(new QuizzAdapter(lessons,this));
 
         // Inflate the layout for this fragment
         return view;

@@ -99,6 +99,7 @@ public class SignupActivity extends AppCompatActivity {
 
                 //load all lessons to user
                 Lesson l = _realm.createObject(Lesson.class);
+                l.id = 1;
                 l.title = "Présent simple";
                 l.category = "Grammaire";
                 l.description = "<ul><li>\n" +

@@ -2,26 +2,13 @@ package com.oc.emousse.multilingua;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.oc.emousse.multilingua.database.Quizz;
-import com.oc.emousse.multilingua.pref.UserShared;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class QuizzActivity extends AppCompatActivity {
     public static final String QUIZZ_QUESTION = "question";
@@ -58,7 +45,7 @@ public class QuizzActivity extends AppCompatActivity {
 
         } else{
             //toast with fail message
-            Toast.makeText(this, "FALSE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Mauvaise réponse!", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if(password.equals(user.password)){
-            onLoginSuccess(email,password);
+            onLoginSuccess(email,user.name);
         } else {
             onLoginFailed();
         }

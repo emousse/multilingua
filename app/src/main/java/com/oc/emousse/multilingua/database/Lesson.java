@@ -14,4 +14,5 @@ public class Lesson extends RealmObject {
     public String description;
     public String category;
     public boolean enable;
+    public boolean isCompleted;
 }

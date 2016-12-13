@@ -1,6 +1,7 @@
 package com.oc.emousse.multilingua;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oc.emousse.multilingua.database.Lesson;
-import com.oc.emousse.multilingua.database.Quizz;
 import com.oc.emousse.multilingua.pref.MyInterface;
 
 import java.util.List;
@@ -26,6 +26,11 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.MyViewHolder
     public QuizzAdapter(List<Lesson> lessons, MyInterface myInterface) {
         _lessons = lessons;
         _myInterface = myInterface;
+    }
+
+    public void swap(List<Lesson> lessons){
+        _lessons = lessons;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -49,6 +54,7 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.MyViewHolder
         private final TextView title;
         private final TextView description;
         private final ImageView icon;
+        private final View itemContainer;
 
         //store current quizz
         private Lesson currentLesson;
@@ -58,6 +64,7 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.MyViewHolder
             title = (TextView) itemView.findViewById(R.id.recycler_title_quizz);
             description = (TextView) itemView.findViewById(R.id.recycler_description_quizz);
             icon = (ImageView) itemView.findViewById(R.id.recycler_icon_quizz);
+            itemContainer = itemView.findViewById(R.id.itemContainer);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,6 +82,7 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.MyViewHolder
             currentLesson = lesson;
             title.setText(Html.fromHtml(lesson.quizz.description));
             icon.setImageResource(R.drawable.logout);
+            itemContainer.setEnabled(lesson.isCompleted);
         }
     }
 }

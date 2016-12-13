@@ -13,15 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.oc.emousse.multilingua.database.Lesson;
-import com.oc.emousse.multilingua.database.Quizz;
 import com.oc.emousse.multilingua.database.User;
 import com.oc.emousse.multilingua.pref.MyInterface;
 import com.oc.emousse.multilingua.pref.UserShared;
 
-import java.util.List;
-
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 
 
@@ -30,6 +26,8 @@ import io.realm.RealmResults;
  */
 public class QuizzFragment extends Fragment implements MyInterface {
     private Realm _realm;
+    private RealmResults<Lesson> _lessons;
+    private QuizzAdapter _qu;
 
     public QuizzFragment() {
         // Required empty public constructor
@@ -45,7 +43,12 @@ public class QuizzFragment extends Fragment implements MyInterface {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK){
             if (requestCode == 1){
-                Toast.makeText(getContext(), Integer.toString(data.getIntExtra(QuizzActivity.LESSON_ID,0)), Toast.LENGTH_SHORT).show();
+                final int lessonId = data.getIntExtra(QuizzActivity.LESSON_ID,0);
+                Toast.makeText(getContext(), Integer.toString(lessonId), Toast.LENGTH_SHORT).show();
+                _realm.beginTransaction();
+                _lessons.where().equalTo("id",lessonId).findFirst().isCompleted = true;
+                _realm.commitTransaction();
+                _qu.notifyDataSetChanged();
             }
         }
     }
@@ -57,7 +60,7 @@ public class QuizzFragment extends Fragment implements MyInterface {
 
         String mail = UserShared.getInstance(getContext()).getEmail();
         User u = _realm.where(User.class).equalTo("email", mail).findFirst();
-        RealmResults<Lesson> lessons = u.lessons.where().equalTo("enable", true).findAll();
+        _lessons = u.lessons.where().equalTo("enable", true).findAll();
 
         //inflate view from xml
         View view = inflater.inflate(R.layout.fragment_quizz, container, false);
@@ -65,7 +68,8 @@ public class QuizzFragment extends Fragment implements MyInterface {
         //setup recycler view and bind data
         final RecyclerView rv = (RecyclerView) view.findViewById(R.id.list_quizz);
         rv.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        rv.setAdapter(new QuizzAdapter(lessons,this));
+        _qu = new QuizzAdapter(_lessons,this);
+        rv.setAdapter(_qu);
 
         // Inflate the layout for this fragment
         return view;

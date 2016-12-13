@@ -28,8 +28,6 @@ public class LessonActivity extends AppCompatActivity {
         twDescription.setText(Html.fromHtml(description));
 
         if(UserShared.getInstance(this).setLastLessonTimestamp(_currentTimestamp)){
-            Toast.makeText(getApplicationContext(),"COMMIT",Toast.LENGTH_SHORT).show();
-
         }
     }
 }

@@ -77,6 +77,9 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.MyViewHold
                 @Override
                 public void onClick(View v) {
                     if (UserShared.getInstance(itemView.getContext()).getLastLessonTimestamp()<yesterdayTimestamp || currentLesson.enable){
+                        if(!currentLesson.enable){
+                            Toast.makeText(v.getContext(), "Un quizz a été debloqué!", Toast.LENGTH_SHORT).show();
+                        }
                         _realm = Realm.getDefaultInstance();
                         _realm.beginTransaction();
                         currentLesson.enable = true;

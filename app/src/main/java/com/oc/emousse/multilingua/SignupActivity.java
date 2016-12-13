@@ -99,7 +99,7 @@ public class SignupActivity extends AppCompatActivity {
 
                 //load all lessons to user
                 Lesson l = _realm.createObject(Lesson.class);
-                l.id = 1;
+                l.id = 0;
                 l.title = "Présent simple";
                 l.category = "Grammaire";
                 l.description = "<ul><li>\n" +
@@ -114,19 +114,19 @@ public class SignupActivity extends AppCompatActivity {
                         "\t\tHe'll give it to you when <b>you come</b> next Saturday.</b></li>\n" +
                         "</ul>";
                 l.enable = false;
+                l.isCompleted = false;
 
                 Quizz q = _realm.createObject(Quizz.class);
                 q.question = "Le présent simple est le <strong>temps de la vérité générale</strong>. Il désigne donc une action qui se répète dans le temps (<em>I go there every Sunday</em>) ou qui est toujours vraie (<em>water boils at 100°C</em>).</p>";
                 q.description = "<strong>Quizz n°1</strong> sur le présent simple.";
                 q.answer = true;
-                q.isCompleted = false;
 
                 l.quizz = q;
                 u.lessons.add(l);
             }
         });
 
-        onSignupSucces("a suppr");
+        onSignupSucces("Utilisateur créé");
     }
 
     public void onSignupSucces(String email){

@@ -39,33 +39,9 @@
             android:text="Faux"/>
     </RadioGroup>
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:elevation="2dp"
-        android:background="@drawable/myrect"
-        android:id="@+id/quizz_question_2" />
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:id="@+id/radio_2">
-        <RadioButton android:id="@+id/true_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Vrai"/>
-        <RadioButton android:id="@+id/false_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Faux"/>
-    </RadioGroup>
 
     <Button
         android:layout_width="match_parent"

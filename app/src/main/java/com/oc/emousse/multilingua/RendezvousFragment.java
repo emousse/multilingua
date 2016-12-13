@@ -1,6 +1,7 @@
 package com.oc.emousse.multilingua;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.oc.emousse.multilingua.database.Rendezvous;
+import com.oc.emousse.multilingua.database.User;
+import com.oc.emousse.multilingua.pref.UserShared;
 
 import java.util.Date;
 
@@ -34,6 +37,15 @@ public class RendezvousFragment extends Fragment{
         // Required empty public constructor
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK){
+            if (requestCode == 1){
+                _rdvAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,11 +62,13 @@ public class RendezvousFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(),AddRendezvousActivity.class);
-                startActivity(i);
+                startActivityForResult(i,1);
             }
         });
         //find date > todayDate
-        _result = _realm.where(Rendezvous.class).greaterThan("date", todayDate).findAll();
+        String mail = UserShared.getInstance(getContext()).getEmail();
+        User u = _realm.where(User.class).equalTo("email", mail).findFirst();
+        _result = u.rdv.where().greaterThan("date", todayDate).findAll();
 
         if(_result!=null){
             //set recyclerview adapter and bind data

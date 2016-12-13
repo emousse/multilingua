@@ -1,5 +1,6 @@
 package com.oc.emousse.multilingua;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
@@ -19,6 +20,8 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 
 import com.oc.emousse.multilingua.database.Rendezvous;
+import com.oc.emousse.multilingua.database.User;
+import com.oc.emousse.multilingua.pref.UserShared;
 
 import java.util.Calendar;
 
@@ -129,16 +132,26 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
                     am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() + 10 * 1000, pi);
                 }
 
-                //commit Rendezvous object in Realm
+                //retrive user from realm
                 _realm = Realm.getDefaultInstance();
-                _realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        Rendezvous r = _realm.createObject(Rendezvous.class);
-                        r.title = txtTitle.getText().toString();
-                        r.date = c.getTime();
-                    }
-                });
+                String mail = UserShared.getInstance(this).getEmail();
+                User u = _realm.where(User.class).equalTo("email", mail).findFirst();
+                //commit Rendezvous object in Realm
+                _realm.beginTransaction();
+                Rendezvous r = _realm.createObject(Rendezvous.class);
+                r.title = txtTitle.getText().toString();
+                r.date = c.getTime();
+                u.rdv.add(r);
+                _realm.commitTransaction();
+                //_realm.executeTransaction(new Realm.Transaction() {
+                //    @Override
+                //    public void execute(Realm realm) {
+                //        Rendezvous r = _realm.createObject(Rendezvous.class);
+                //        r.title = txtTitle.getText().toString();
+                //        r.date = c.getTime();
+                //    }
+                //});
+                setResult(Activity.RESULT_OK, new Intent());
                 finish();
             } else {
                 //show alert dialog or toast

@@ -44,7 +44,7 @@ public class QuizzFragment extends Fragment implements MyInterface {
         if (resultCode == Activity.RESULT_OK){
             if (requestCode == 1){
                 final int lessonId = data.getIntExtra(QuizzActivity.LESSON_ID,0);
-                Toast.makeText(getContext(), Integer.toString(lessonId), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Bravo!", Toast.LENGTH_SHORT).show();
                 _realm.beginTransaction();
                 _lessons.where().equalTo("id",lessonId).findFirst().isCompleted = true;
                 _realm.commitTransaction();

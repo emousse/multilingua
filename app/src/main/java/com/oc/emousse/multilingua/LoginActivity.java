@@ -102,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess(String email, String name){
         _loginButton.setEnabled(true);
-        Toast.makeText(getBaseContext(), "Connexion OK", Toast.LENGTH_LONG).show();
 
         UserShared.getInstance(getApplicationContext()).createLoginSession(email, name);
         Intent i = new Intent(LoginActivity.this,MainActivity.class);

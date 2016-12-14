@@ -123,6 +123,28 @@ public class SignupActivity extends AppCompatActivity {
 
                 l.quizz = q;
                 u.lessons.add(l);
+
+                //load all lessons to user
+                Lesson l1 = _realm.createObject(Lesson.class);
+                l1.id = 1;
+                l1.title = "Passé progressif";
+                l1.category = "Grammaire";
+                l1.description = "<p>Le passé progressif décrit des actions ou des événements à un moment <strong>antérieur à l'instant présent</strong>, qui ont commencé dans le passé et sont <strong>toujours en cours</strong> au moment où nous parlons. Autrement dit, il exprime une action <strong>inachevée ou incomplète</strong> dans le passé.</p>\n" +
+                        "<p><strong>Il est utilisé:</strong></p>\n" +
+                        "<ul><li>\n" +
+                        "\t\tSouvent, pour décrire le contexte d'une histoire écrite dans le passé, par exemple: \"The sun <strong>was shining</strong> and the birds <strong>were singing</strong> as the elephant came out of the jungle. The other animals <strong>were relaxing</strong> in the shade of the trees, but the elephant moved very quickly. She <strong>was looking</strong> for her baby, and she didn't notice the hunter who <strong>was watching</strong> her through his binoculars. When the shot rang out, she <strong>was running</strong> towards the river...\"</li>\n" +
+                        "<li>\n" +
+                        "</ul>";
+                l1.enable = false;
+                l1.isCompleted = false;
+
+                Quizz q1 = _realm.createObject(Quizz.class);
+                q1.question = "<p>Le passé progressif de n'importe quel verbe est composé de deux éléments : le verbe <em>\"to be\" (was/were)</em>au passé et la base du verbe principal <em>+ing</em>.</p>";
+                q1.description = "<strong>Quizz n°2</strong> sur le passé progressif.";
+                q1.answer = true;
+
+                l1.quizz = q1;
+                u.lessons.add(l1);
             }
         });
 

@@ -173,7 +173,7 @@ public class AddRendezvousActivity extends AppCompatActivity implements View.OnC
             txtTitle.setError(null);
         }
 
-        if (mHour < 8 || mHour > 18){
+        if (mHour < 8 || mHour > 20){
             valid = false;
             txtTime.setError("L'heure doit être comprise entre 8h et 18h.");
         } else {
